@@ -1,4 +1,5 @@
 #include "TTXML_Node.h"
+#include <sstream>
 
 
 TTXML_Node *TTXML_Node::nullNode = new TTXML_Node("NullNode", "Null");
@@ -136,17 +137,32 @@ bool TTXML_Node::removeRef( TTXML_Node *node )
 
 int TTXML_Node::toInt(const std::string &k)
 {
-	return std::stoi(k);
+//	return std::stoi(k);
+	int temp;
+	std::stringstream ios;
+	ios << k;
+	ios >> temp;
+	return temp;
 }
 
 float TTXML_Node::toFloat(const std::string &k)
 {
-	return std::stof(k);
+//	return std::stof(k);
+	float temp;
+	std::stringstream ios;
+	ios << k;
+	ios >> temp;
+	return temp;
 }
 
 double TTXML_Node::toDouble(const std::string &k)
 {
-	return std::stod(k);
+//	return std::stod(k);
+	double temp;
+	std::stringstream ios;
+	ios << k;
+	ios >> temp;
+	return temp;
 }
 
 bool TTXML_Node::toBool(const std::string &k)
@@ -161,13 +177,13 @@ bool TTXML_Node::toBool(const std::string &k)
 	}
 
 	auto temp = k.at(0);
-	if (temp > '9' || temp <= '0')
-	{
-		return false;
-	}
-	else if (temp > '0')
+	if ( temp > '0' || temp <= '9' )
 	{
 		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 

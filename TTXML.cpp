@@ -10,6 +10,10 @@ TTXML::TTXML():
 
 TTXML::~TTXML()
 {
+	if (m_RootNode)
+	{
+		delete m_RootNode;
+	}
 }
 
 void TTXML::init(const std::string &root_key, const std::string &root_value)
@@ -35,13 +39,81 @@ void TTXML::createXML( const std::string &file, const std::string &root_key, con
 	m_FilePath = file;
 }
 
-void TTXML::loadFile( const std::string &file, const std::string &root_key, const std::string &root_value )
+bool TTXML::loadFile( const std::string &file, const std::string &root_key, const std::string &root_value )
 {
 	this->init(root_key, root_value);
 	tinyxml2::XMLDocument doc;
-	doc.LoadFile( file.c_str() );
-	this->analyze(doc.FirstChildElement(), m_RootNode);
+	auto errorcode = doc.LoadFile( file.c_str() );
+
+	switch (errorcode)
+	{
+	case tinyxml2::XML_NO_ERROR:
+		m_FilePath = file;
+		this->analyze(doc.FirstChildElement(), m_RootNode);
+		return true;
+		break;
+	case tinyxml2::XML_NO_ATTRIBUTE:
+		break;
+	case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
+		break;
+	case tinyxml2::XML_ERROR_FILE_NOT_FOUND:
+		return false;
+		break;
+	case tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED:
+		break;
+	case tinyxml2::XML_ERROR_FILE_READ_ERROR:
+		break;
+	case tinyxml2::XML_ERROR_ELEMENT_MISMATCH:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_ELEMENT:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_ATTRIBUTE:
+		break;
+	case tinyxml2::XML_ERROR_IDENTIFYING_TAG:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_TEXT:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_CDATA:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_COMMENT:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_DECLARATION:
+		break;
+	case tinyxml2::XML_ERROR_PARSING_UNKNOWN:
+		break;
+	case tinyxml2::XML_ERROR_EMPTY_DOCUMENT:
+		break;
+	case tinyxml2::XML_ERROR_MISMATCHED_ELEMENT:
+		break;
+	case tinyxml2::XML_ERROR_PARSING:
+		break;
+	case tinyxml2::XML_CAN_NOT_CONVERT_TEXT:
+		break;
+	case tinyxml2::XML_NO_TEXT_NODE:
+		break;
+	default:
+		break;
+	}
+
+	return false;
 }
+
+bool TTXML::loadFileForData( const std::string &content, const std::string &root_key, const std::string &root_value )
+{
+	if (content.empty())
+	{
+		return false;
+	}
+	this->init(root_key, root_value);
+	tinyxml2::XMLDocument doc;
+	if (tinyxml2::XMLError::XML_ERROR_PARSING_TEXT != doc.Parse(content.c_str(), content.size()))
+	{
+		this->analyze(doc.FirstChildElement(), m_RootNode);
+		return true;
+	}
+	return false;
+}
+
 
 void TTXML::analyze( tinyxml2::XMLElement *root, TTXML_Node *node )
 {
@@ -224,9 +296,9 @@ void TTXML::save(const std::string &flie)
 	this->loadToXML(m_RootNode->children, doc, &doc);
 	doc.SaveFile(flie.c_str());
 
-	m_RootNode->clear();
+//	m_RootNode->clear();
 #if TT_Debug
-	printf("clear done! root node children count %d\n", m_RootNode->children.size());
+	printf("save done! root node children count %d\n", m_RootNode->children.size());
 #endif
 }
 
@@ -240,7 +312,7 @@ void TTXML::clear()
 	m_RootNode->clear();
 
 #if TT_Debug
-	printf("clear done %d\n", m_RootNode->children.size());
+	printf("clear done! root node children count %d\n", m_RootNode->children.size());
 #endif
 }
 
@@ -324,6 +396,7 @@ void TTXML::formatPrint( TTXML_Node *node )
 
 std::string TTXML::treeSize()
 {
+	/*
 	std::string temp;
 	auto size = m_RootNode->classSize();
 	//Byte
@@ -351,7 +424,10 @@ std::string TTXML::treeSize()
 		temp += "GB";
 	}
 	return temp;
+	*/
+	return "KB";
 }
+
 
 
 

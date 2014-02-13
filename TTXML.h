@@ -1,4 +1,4 @@
-/***********************************************************************
+/***************************************************************************************************************
 *  TTXML.h
 *  作者 : 扈晨龙(特兹卡特)
 *  功能 : XML解析
@@ -7,11 +7,11 @@
 *  说明 : 1.数据组织结构,可以导出成XML文件
 *           2.每个节点的内存由其父节点管理,不用手动管理内存
 *           3.所有节点必须全部通过TTXML,TTXML_Node类create出来,不能使用new或者对象
-***********************************************************************/
+***************************************************************************************************************/
 #ifndef __TT_XML_H__
 #define __TT_XML_H__
 
-#include "tinyxml2.h"
+#include "tinyxml2/tinyxml2.h"
 
 #include <string>
 #include <list>
@@ -32,7 +32,15 @@ public:
 	 *	@param root_key 根节点键 默认值为RootNode
 	 *	@param root_value 根节点值 默认值为node
 	 */
-	void loadFile(const std::string &file, const std::string &root_key = TTXML_ROOT_NODE, const std::string &root_value = TTXML_NODE);
+	bool loadFile(const std::string &file, const std::string &root_key = TTXML_ROOT_NODE, const std::string &root_value = TTXML_NODE);
+
+	/**
+	 *	@brief 格式化标准XML字符串
+	 *	@param content xml全文本
+	 *	@param root_key 根节点键 默认值为RootNode
+	 *	@param root_value 根节点值 默认值为node
+	 */
+	bool loadFileForData(const std::string &content, const std::string &root_key = TTXML_ROOT_NODE, const std::string &root_value = TTXML_NODE);
 
 	/**
 	 *	@brief 创建一个XML数据结构

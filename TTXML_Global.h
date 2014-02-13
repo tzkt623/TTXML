@@ -12,7 +12,7 @@
 #define TTXML_ROOT_NODE "RootNode"
 #define TTXML_NULL_PKEY "NullPkey"
 
-#define TT_Debug 0
+#define TT_Debug 1
 
 
 
